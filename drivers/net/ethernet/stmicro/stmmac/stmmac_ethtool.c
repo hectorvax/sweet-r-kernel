@@ -647,17 +647,10 @@ static void stmmac_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
 {
 	struct stmmac_priv *priv = netdev_priv(dev);
 
-	if (!priv->phydev) {
-		pr_err("%s: %s: PHY is not registered\n",
-		       __func__, dev->name);
-		return;
-	}
-
-	phy_ethtool_get_wol(priv->phydev, wol);
 	mutex_lock(&priv->lock);
 	if (device_can_wakeup(priv->device)) {
 		wol->supported = WAKE_MAGIC | WAKE_UCAST;
-		wol->wolopts |= priv->wolopts;
+		wol->wolopts = priv->wolopts;
 	}
 	mutex_unlock(&priv->lock);
 }
@@ -711,9 +704,9 @@ static int stmmac_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
 		}
 	}
 
-	if (ethqos->phy_wol_wolopts != wol->wolopts) {
-		if (phy_intr_en && ethqos->phy_wol_supported) {
-			ethqos->phy_wol_wolopts = 0;
+	mutex_lock(&priv->lock);
+	priv->wolopts = wol->wolopts;
+	mutex_unlock(&priv->lock);
 
 			ret = phy_ethtool_set_wol(priv->phydev, wol);
 
