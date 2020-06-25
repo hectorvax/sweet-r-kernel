@@ -487,31 +487,6 @@ static int xhci_plat_resume(struct device *dev)
 	if (ret)
 		return ret;
 
-	ret = xhci_resume(xhci, false);
-	pm_runtime_disable(dev);
-	pm_runtime_set_active(dev);
-	pm_runtime_enable(dev);
-
-	return ret;
-}
-
-static int xhci_plat_restore(struct device *dev)
-{
-	struct usb_hcd  *hcd = dev_get_drvdata(dev);
-	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
-	int ret;
-
-	/* xhci PM ops not required if 'skip_resume' is true */
-	if (!xhci || hcd_to_bus(hcd)->skip_resume)
-		return 0;
-
-	dev_dbg(dev, "xhci-plat PM restore\n");
-
-	ret = xhci_priv_resume_quirk(hcd);
-	if (ret)
-		return ret;
-
-	/* resume from hibernation/power-collapse */
 	ret = xhci_resume(xhci, true);
 	pm_runtime_disable(dev);
 	pm_runtime_set_active(dev);
@@ -536,6 +511,9 @@ static int __maybe_unused xhci_plat_runtime_idle(struct device *dev)
 	pm_runtime_mark_last_busy(dev);
 	pm_runtime_autosuspend(dev);
 	return -EBUSY;
+=======
+	return 0;
+>>>>>>> e570b0fb2f3d... Merge 4.14.186 into android-4.14-stable
 }
 
 static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
