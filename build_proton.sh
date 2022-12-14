@@ -25,8 +25,8 @@ export SUBARCH=arm64
 export KBUILD_BUILD_USER="hectorvax"
 export KBUILD_BUILD_HOST="perfmod"
 
-#make CC="ccache clang" CXX="ccache clang++" O=out-clang sweet_mod_defconfig
-make CC="ccache clang" CXX="ccache clang++" O=out-clang sweet_user_defconfig
+make CC="ccache clang" CXX="ccache clang++" O=out-clang vendor/sweet_perfmod_defconfig
+#make CC="ccache clang" CXX="ccache clang++" O=out-clang sweet_user_defconfig
 
  make CC="ccache clang" CXX="ccache clang++" O=out-clang $THREAD 2>&1 | tee kernel.log
 
