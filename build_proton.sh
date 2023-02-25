@@ -28,7 +28,7 @@ export KBUILD_BUILD_HOST="perfmod"
 #make CC="ccache clang" CXX="ccache clang++" O=out-clang sweet_mod_defconfig
 make CC="ccache clang" CXX="ccache clang++" O=out-clang sweet_user_defconfig
 
- make CC="ccache clang" CXX="ccache clang++" O=out-clang $THREAD 2>&1 | tee kernel.log
+ make CC="ccache clang" CXX="ccache clang++" O=out-clang NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip $THREAD 2>&1 | tee kernel.log
 
 End=$(date +"%s")
 Diff=$(($End - $Start))
